@@ -1,0 +1,60 @@
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEScan.h>
+#include <BLEAdvertisedDevice.h>//BLE lib include
+//declare a BLE scan object
+class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks
+{void onResult(BLEAdvertisedDevice advertisedDevice)
+  {//Serial.printf("Advertised Device: %s \n", advertisedDevice.toString().c_str());
+    }
+};
+int scanTime=5;//set scantime, if time too less, you will lose some beacons that not discovered
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  Serial.println("Beacon Scanning....");
+  BLEDevice::init("");//clear beacon list
+  BLEScan* pBLEScan = BLEDevice::getScan(); //create scan
+  pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+  pBLEScan->setActiveScan(true); //start to scan
+  BLEScanResults foundDevices = pBLEScan->start(scanTime);//wait for scanning
+  Serial.print("Found Beacons: ");
+  Serial.println(foundDevices.getCount());
+  Serial.println("End of Scanning");
+  int BeaconCount=foundDevices.getCount();
+  //list discover beacons data
+  Serial.println("Show Beacons content:");
+   for (int i=0; i<BeaconCount; i++)
+   {
+       BLEAdvertisedDevice d=foundDevices.getDevice(i);
+       Serial.print("Address=");
+       String BeaconAddress=d.getAddress().toString().c_str();
+       Serial.print(BeaconAddress);
+       int BeaconRSSI=d.getRSSI();
+       if (d.haveServiceUUID())//show UUID
+       {
+         Serial.print(",UUID=");
+         String BeaconUUID;
+         BeaconUUID=d.getServiceUUID().toString().c_str();
+         Serial.print(BeaconUUID);
+       }
+
+       if (d.haveName())//Show name
+       {
+        Serial.printf(",name=");
+        String BeaconName=d.getName().c_str();
+        Serial.print(BeaconName);
+       }       
+       Serial.print(",RSSI=");
+       Serial.println(BeaconRSSI);//Show RSSI
+
+       //-----add some codes here. ex
+       //if beacon's address equal to the address you want, and RSSI bigger than -50, then make some noise
+       //-----
+   }
+  
+}
