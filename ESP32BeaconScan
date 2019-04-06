@@ -5,8 +5,10 @@
 //declare a BLE scan object
 class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks
 {void onResult(BLEAdvertisedDevice advertisedDevice)
-  {//Serial.printf("Advertised Device: %s \n", advertisedDevice.toString().c_str());
-    }
+  {
+     //Print any beacon's data to serial when discovered
+     //Serial.printf("Advertised Device: %s \n", advertisedDevice.toString().c_str());     
+  }
 };
 int scanTime=5;//set scantime, if time too less, you will lose some beacons that not discovered
 void setup()
@@ -52,7 +54,7 @@ void loop()
        Serial.print(",RSSI=");
        Serial.println(BeaconRSSI);//Show RSSI
 
-       //-----add some codes here. ex
+       //-----add some codes here. For example
        //if beacon's address equal to the address you want, and RSSI bigger than -50, then make some noise
        //-----
    }
