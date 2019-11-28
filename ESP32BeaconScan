@@ -37,7 +37,7 @@ void loop()
        String BeaconAddress=d.getAddress().toString().c_str();
        Serial.print(BeaconAddress);
        int BeaconRSSI=d.getRSSI();
-       if (d.haveServiceUUID())//show UUID
+       if (d.haveServiceUUID())
        {
          Serial.print(",UUID=");
          String BeaconUUID;
@@ -45,7 +45,7 @@ void loop()
          Serial.print(BeaconUUID);
        }
 
-       if (d.haveName())//Show name
+       if (d.haveName())
        {
         Serial.printf(",name=");
         String BeaconName=d.getName().c_str();
